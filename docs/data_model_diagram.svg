@@ -1,0 +1,88 @@
+<svg viewBox="0 0 1040 620" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="1040" height="620" fill="#ffffff"/>
+
+  <!-- Dim_Company -->
+  <g>
+    <rect x="40" y="40" width="300" height="280" rx="8" fill="#eef3fb" stroke="#2f5f9e" stroke-width="1.5"/>
+    <rect x="40" y="40" width="300" height="34" rx="8" fill="#2f5f9e"/>
+    <text x="190" y="63" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="600">Dim_Company</text>
+    <text x="56" y="94" font-size="12.5" fill="#1a1a1a" font-weight="600">Stock  (PK)</text>
+    <text x="56" y="114" font-size="12" fill="#333">FirstFYEndDate</text>
+    <text x="56" y="132" font-size="12" fill="#333">LatestFYEndDate</text>
+    <text x="56" y="150" font-size="12" fill="#333">PeriodsAvailableAnnual</text>
+    <text x="56" y="168" font-size="12" fill="#333">HasFullHistory4FY</text>
+    <text x="56" y="186" font-size="12" fill="#333">LatestFYRevenue</text>
+    <text x="56" y="204" font-size="12" fill="#333">LatestFYNetIncome</text>
+    <text x="56" y="222" font-size="12" fill="#333">LatestFYTotalAssets</text>
+    <text x="56" y="240" font-size="12" fill="#333">LatestFYNetMargin</text>
+    <text x="56" y="258" font-size="12" fill="#333">RevenueSizeBand</text>
+    <text x="56" y="276" font-size="12" fill="#333">ProfitabilityTier</text>
+    <text x="56" y="294" font-size="12" fill="#333">DataCompletenessFlag</text>
+  </g>
+
+  <!-- Dim_Date -->
+  <g>
+    <rect x="700" y="40" width="300" height="150" rx="8" fill="#eef3fb" stroke="#2f5f9e" stroke-width="1.5"/>
+    <rect x="700" y="40" width="300" height="34" rx="8" fill="#2f5f9e"/>
+    <text x="850" y="63" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="600">Dim_Date</text>
+    <text x="716" y="94" font-size="12.5" fill="#1a1a1a" font-weight="600">Date  (PK)</text>
+    <text x="716" y="114" font-size="12" fill="#333">Year</text>
+    <text x="716" y="132" font-size="12" fill="#333">Quarter</text>
+    <text x="716" y="150" font-size="12" fill="#333">MonthNumber, MonthName</text>
+    <text x="716" y="168" font-size="12" fill="#333">(marked as Power BI Date Table)</text>
+  </g>
+
+  <!-- Fact_Annual -->
+  <g>
+    <rect x="40" y="400" width="430" height="200" rx="8" fill="#fff6e8" stroke="#c9821f" stroke-width="1.5"/>
+    <rect x="40" y="400" width="430" height="34" rx="8" fill="#c9821f"/>
+    <text x="255" y="423" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="600">Fact_Annual  (17,511 rows)</text>
+    <text x="56" y="454" font-size="12.5" fill="#1a1a1a" font-weight="600">Stock  (FK → Dim_Company)</text>
+    <text x="56" y="472" font-size="12.5" fill="#1a1a1a" font-weight="600">EndDate  (FK → Dim_Date)</text>
+    <text x="56" y="490" font-size="12" fill="#333">FYIndex, IsLatestFY, PeriodsAvailable</text>
+    <text x="56" y="508" font-size="12" fill="#333">Revenue, CostOfRevenue, GrossProfit, EBIT, NetIncome …</text>
+    <text x="56" y="526" font-size="12" fill="#333">TotalAssets, TotalLiabilities, TotalEquity, Cash, Debt …</text>
+    <text x="56" y="544" font-size="12" fill="#333">CashFromOperations, CapEx, FreeCashFlow</text>
+    <text x="56" y="562" font-size="12" fill="#333">GrossMargin, NetMargin, ROA, ROE, DebtToEquity …</text>
+    <text x="56" y="580" font-size="12" fill="#333">RevenueGrowthYoY, NetIncomeGrowthYoY</text>
+  </g>
+
+  <!-- Fact_Quarterly -->
+  <g>
+    <rect x="570" y="400" width="430" height="200" rx="8" fill="#fdeeee" stroke="#a4423b" stroke-width="1.5"/>
+    <rect x="570" y="400" width="430" height="34" rx="8" fill="#a4423b"/>
+    <text x="785" y="423" text-anchor="middle" fill="#ffffff" font-size="15" font-weight="600">Fact_Quarterly  (17,651 rows)</text>
+    <text x="586" y="454" font-size="12.5" fill="#1a1a1a" font-weight="600">Stock  (FK → Dim_Company)</text>
+    <text x="586" y="472" font-size="12.5" fill="#1a1a1a" font-weight="600">EndDate  (FK → Dim_Date)</text>
+    <text x="586" y="490" font-size="12" fill="#333">QIndex, IsLatestQuarter, PeriodsAvailable</text>
+    <text x="586" y="508" font-size="12" fill="#333">Revenue, GrossProfit, OperatingIncome, NetIncome</text>
+    <text x="586" y="526" font-size="12" fill="#333">TotalAssets, TotalEquity</text>
+    <text x="586" y="544" font-size="12" fill="#333">CashFromOperations, CapEx, FreeCashFlow</text>
+    <text x="586" y="562" font-size="12" fill="#333">GrossMargin, OperatingMargin, NetMargin</text>
+    <text x="586" y="580" font-size="12" fill="#333">RevenueGrowthYoQ, NetIncomeGrowthYoQ</text>
+    <text x="586" y="596" font-size="11" fill="#777" font-style="italic">used on Page 4 (Company Deep Dive) only</text>
+  </g>
+
+  <!-- relationships -->
+  <!-- Dim_Company -> Fact_Annual -->
+  <path d="M 130 320 C 130 360, 200 380, 230 400" fill="none" stroke="#555" stroke-width="1.5"/>
+  <text x="145" y="345" font-size="11" fill="#555">1</text>
+  <text x="220" y="392" font-size="11" fill="#555">*</text>
+
+  <!-- Dim_Company -> Fact_Quarterly -->
+  <path d="M 260 320 C 400 360, 600 370, 700 400" fill="none" stroke="#555" stroke-width="1.5"/>
+  <text x="270" y="345" font-size="11" fill="#555">1</text>
+  <text x="685" y="392" font-size="11" fill="#555">*</text>
+
+  <!-- Dim_Date -> Fact_Annual -->
+  <path d="M 760 190 C 550 260, 400 320, 300 400" fill="none" stroke="#555" stroke-width="1.5"/>
+  <text x="740" y="212" font-size="11" fill="#555">1</text>
+  <text x="315" y="392" font-size="11" fill="#555">*</text>
+
+  <!-- Dim_Date -> Fact_Quarterly -->
+  <path d="M 850 190 C 850 280, 830 340, 800 400" fill="none" stroke="#555" stroke-width="1.5"/>
+  <text x="858" y="212" font-size="11" fill="#555">1</text>
+  <text x="808" y="392" font-size="11" fill="#555">*</text>
+
+  <text x="520" y="24" text-anchor="middle" font-size="14" fill="#1a1a1a" font-weight="600">Public Company Financial Intelligence — Data Model</text>
+</svg>

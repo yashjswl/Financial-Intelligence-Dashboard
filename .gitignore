@@ -1,0 +1,14 @@
+# Source data belongs to its original author; users download it themselves
+data/raw/*
+!data/raw/README.md
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

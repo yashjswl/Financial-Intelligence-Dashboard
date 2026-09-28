@@ -1,0 +1,100 @@
+<svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
+  <rect width="1280" height="720" fill="#f7f8fa"/>
+  <rect x="0" y="0" width="1280" height="40" fill="#1f2937"/>
+  <text x="20" y="26" fill="#ffffff" font-size="16" font-weight="600">Executive Overview — latest fiscal year per company</text>
+
+  <!-- KPI cards -->
+  <g font-size="11" fill="#333">
+    <rect x="20" y="50" width="190" height="100" rx="6" fill="#ffffff" stroke="#d8dce1"/>
+    <text x="34" y="72" fill="#6b7280">COMPANIES</text>
+    <text x="34" y="110" font-size="26" font-weight="700" fill="#1f2937">4,422</text>
+
+    <rect x="220" y="50" width="190" height="100" rx="6" fill="#ffffff" stroke="#d8dce1"/>
+    <text x="234" y="72" fill="#6b7280">TOTAL REVENUE</text>
+    <text x="234" y="110" font-size="24" font-weight="700" fill="#1f2937">$18.4T</text>
+
+    <rect x="420" y="50" width="190" height="100" rx="6" fill="#ffffff" stroke="#d8dce1"/>
+    <text x="434" y="72" fill="#6b7280">TOTAL NET INCOME</text>
+    <text x="434" y="110" font-size="24" font-weight="700" fill="#1f2937">$1.49T</text>
+
+    <rect x="620" y="50" width="190" height="100" rx="6" fill="#ffffff" stroke="#d8dce1"/>
+    <text x="634" y="72" fill="#6b7280">PROFIT MARGIN %</text>
+    <text x="634" y="110" font-size="24" font-weight="700" fill="#1f2937">8.1%</text>
+
+    <rect x="820" y="50" width="190" height="100" rx="6" fill="#ffffff" stroke="#d8dce1"/>
+    <text x="834" y="72" fill="#6b7280">EBITDA (APPROX.)</text>
+    <text x="834" y="110" font-size="24" font-weight="700" fill="#1f2937">$3.11T</text>
+    <text x="834" y="138" font-size="9" fill="#9ca3af">EBIT + Depreciation</text>
+
+    <rect x="1020" y="50" width="240" height="100" rx="6" fill="#ffffff" stroke="#d8dce1"/>
+    <text x="1034" y="72" fill="#6b7280">MEDIAN REVENUE</text>
+    <text x="1034" y="110" font-size="24" font-weight="700" fill="#1f2937">$417M</text>
+  </g>
+
+  <!-- Revenue by size band -->
+  <g>
+    <rect x="20" y="170" width="610" height="230" rx="6" fill="#ffffff" stroke="#d8dce1"/>
+    <text x="34" y="192" font-size="12" font-weight="600" fill="#1f2937">Revenue by Size Band</text>
+    <rect x="60" y="220" width="60" height="150" fill="#93c5fd"/>
+    <rect x="150" y="330" width="60" height="40" fill="#93c5fd"/>
+    <rect x="240" y="345" width="60" height="25" fill="#93c5fd"/>
+    <rect x="330" y="355" width="60" height="15" fill="#93c5fd"/>
+    <rect x="420" y="365" width="60" height="5" fill="#93c5fd"/>
+    <text x="60" y="385" font-size="9" fill="#6b7280">Mega</text>
+    <text x="150" y="385" font-size="9" fill="#6b7280">Large</text>
+    <text x="240" y="385" font-size="9" fill="#6b7280">Mid</text>
+    <text x="330" y="385" font-size="9" fill="#6b7280">Small</text>
+    <text x="420" y="385" font-size="9" fill="#6b7280">Micro</text>
+  </g>
+
+  <!-- Net margin by size band -->
+  <g>
+    <rect x="650" y="170" width="610" height="230" rx="6" fill="#ffffff" stroke="#d8dce1"/>
+    <text x="664" y="192" font-size="12" font-weight="600" fill="#1f2937">Net Margin by Size Band (weighted &amp; median)</text>
+    <rect x="690" y="330" width="25" height="40" fill="#93c5fd"/>
+    <rect x="720" y="335" width="25" height="35" fill="#1d4ed8"/>
+    <rect x="780" y="335" width="25" height="35" fill="#93c5fd"/>
+    <rect x="810" y="338" width="25" height="32" fill="#1d4ed8"/>
+    <rect x="870" y="345" width="25" height="25" fill="#93c5fd"/>
+    <rect x="900" y="340" width="25" height="30" fill="#1d4ed8"/>
+    <text x="690" y="385" font-size="9" fill="#6b7280">Mega</text>
+    <text x="780" y="385" font-size="9" fill="#6b7280">Large</text>
+    <text x="870" y="385" font-size="9" fill="#6b7280">Mid</text>
+  </g>
+
+  <!-- tables -->
+  <g>
+    <rect x="20" y="420" width="610" height="270" rx="6" fill="#ffffff" stroke="#d8dce1"/>
+    <text x="34" y="442" font-size="12" font-weight="600" fill="#1f2937">Top 10 Companies by Revenue</text>
+    <line x1="34" y1="452" x2="616" y2="452" stroke="#e5e7eb"/>
+    <text x="34" y="470" font-size="10" fill="#6b7280">Stock</text>
+    <text x="150" y="470" font-size="10" fill="#6b7280">Revenue</text>
+    <text x="280" y="470" font-size="10" fill="#6b7280">Net Income</text>
+    <text x="420" y="470" font-size="10" fill="#6b7280">Margin %</text>
+    <text x="34" y="492" font-size="10" fill="#333">WMT</text>
+    <text x="150" y="492" font-size="10" fill="#333">$524.0B</text>
+    <text x="280" y="492" font-size="10" fill="#333">$14.9B</text>
+    <text x="420" y="492" font-size="10" fill="#333">2.8%</text>
+    <text x="34" y="512" font-size="10" fill="#333">AMZN</text>
+    <text x="150" y="512" font-size="10" fill="#333">$280.5B</text>
+    <text x="280" y="512" font-size="10" fill="#333">$11.6B</text>
+    <text x="420" y="512" font-size="10" fill="#333">4.1%</text>
+    <text x="34" y="532" font-size="10" fill="#9ca3af">…</text>
+  </g>
+  <g>
+    <rect x="650" y="420" width="610" height="270" rx="6" fill="#ffffff" stroke="#d8dce1"/>
+    <text x="664" y="442" font-size="12" font-weight="600" fill="#1f2937">Top 10 Companies by Net Margin (revenue &gt; 0)</text>
+    <line x1="664" y1="452" x2="1246" y2="452" stroke="#e5e7eb"/>
+    <text x="664" y="470" font-size="10" fill="#6b7280">Stock</text>
+    <text x="780" y="470" font-size="10" fill="#6b7280">Revenue</text>
+    <text x="910" y="470" font-size="10" fill="#6b7280">Margin %</text>
+    <text x="664" y="492" font-size="10" fill="#333">ASG</text>
+    <text x="780" y="492" font-size="10" fill="#333">$1.4M</text>
+    <text x="910" y="492" font-size="10" fill="#333">4,528.3%</text>
+    <text x="664" y="512" font-size="10" fill="#9ca3af">…</text>
+  </g>
+
+  <!-- slicer note -->
+  <rect x="20" y="700" width="1240" height="16" fill="none"/>
+  <text x="20" y="712" font-size="9" fill="#9ca3af">Slicers (RevenueSizeBand, ProfitabilityTier, DataCompletenessFlag) sit above the KPI row in the built report.</text>
+</svg>
