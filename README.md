@@ -1,16 +1,13 @@
 # Public Company Financial Intelligence Dashboard
 
-A four-page Power BI report built from the reported income statements, balance sheets and cash-flow statements of **4,422 public companies (fiscal years through mid-2020)**. It lets an analyst size the company universe, benchmark a company against peers of similar size, surface financially unusual companies with a transparent rule, and inspect any single company over its available fiscal years.
-
-## Overview
-
-Most portfolio BI projects start from a tidy, richly labelled dataset. This one did not: the Kaggle source is six raw statement extracts keyed only by ticker and filing date, with no company name, sector, industry, geography, market data or headcount. That gap was the first finding of the project (see [`docs/DATASET_AUDIT.md`](docs/DATASET_AUDIT.md)), and the solution was designed around it rather than assuming it away.
-
-Instead of an industry-benchmarking dashboard the data cannot support, peer groups are **cohorts derived from the financials themselves**: revenue-size quintiles (Micro → Mega) and net-margin tiers, computed in Python. Every KPI, chart and claim traces to a column verified present in the source; nothing about sector, geography, market capitalisation or real-time data is implied.
+A Power BI report built from the reported income statements, balance sheets and cash-flow statements of **4,422 public companies (fiscal years through mid-2020)**. It help to size the company universe, benchmark a company against peers of similar size, surface financially unusual companies with a transparent rule, and inspect any single company over its available fiscal years.
 
 ## Objective
 
-Give an analyst three things from statement data alone: (1) a fast read on the size and health of the company universe, (2) a way to benchmark one company against comparably sized peers, and (3) a documented, quantitative rule for flagging unusual margins without labelling them "bad".
+Give an analyst three things from statement data : 
+(1) a fast read on the size and health of the company universe, 
+(2) a way to benchmark one company against comparably sized peers, and 
+(3) a documented, quantitative rule for flagging unusual margins without labelling them "bad".
 
 ## Dataset
 
@@ -47,9 +44,9 @@ Pick a company: latest-year KPIs, multi-year revenue, net income and margin tren
 
 ## Key features
 
-- KPI cards driven by DAX measures with guarded ratios (blank rather than error or nonsense when a denominator is zero or negative)
+- KPI cards driven by DAX measures with guarded ratios
 - Peer-cohort benchmarking: company net margin and liabilities-to-assets versus the median of its revenue-size band
-- Transparent outlier rule: net margin beyond the 3×IQR fences (−81.1% / +89.7%) among analysis-ready companies; outliers are described as unusual, not weak
+- Transparent outlier rule: net margin beyond the 3×IQR fences (−81.1% / +89.7%) among analysis-ready companies
 - Single-company deep dive over up to four fiscal years plus the last four quarters
 - Slicers for revenue-size band, profitability tier and data completeness
 - Chart axes that are clipped or log-scaled are labelled as such on the chart
@@ -98,9 +95,9 @@ All figures use each company's latest fiscal year and were recomputed independen
 - The top revenue-size quintile (836 of 4,422 companies) accounts for **89.1%** of aggregate revenue.
 - Median year-over-year revenue growth is **+4.8%**.
 - Company size and net margin are only weakly related (correlation of log-revenue and margin: **+0.20**).
-- **595 of 4,140** analysis-ready companies (14.4%) fall outside the 3×IQR margin fences; most of the highest margins belong to small, revenue-light entities where a tiny revenue line sits next to a larger net income, a scale effect rather than best-in-class performance.
+- **595 of 4,140** analysis-ready companies (14.4%) fall outside the 3×IQR margin fences
 
-Full write-up, with each insight labelled as observed fact, calculated metric or interpretation: [`docs/KEY_INSIGHTS.md`](docs/KEY_INSIGHTS.md).
+Each insight is labelled as observed fact, calculated metric or interpretation in: [`docs/KEY_INSIGHTS.md`](docs/KEY_INSIGHTS.md).
 
 ## Project architecture
 
@@ -132,26 +129,4 @@ public-company-financial-intelligence/
 └── screenshots/                       # the four report pages
 ```
 
-## Limitations
-
-- **No sector, industry, geography, market cap, share price or employee count** in the source. "Peers" are size cohorts computed from the financials, not an industry classification.
-- **Static extract** (files dated 14 Jun 2020). The report is not live and is not connected to any real-time source.
-- **At most four annual and four quarterly periods per company**: enough for year-over-year growth, not for long-run trends or CAGR.
-- **Fiscal year-ends are not calendar-aligned** (about 79% of annual filings end in December), so growth uses a per-company fiscal index.
-- **Currency is not stated** in the source; figures are treated as one reporting currency, which is an assumption.
-- **The balance-sheet identity (assets = liabilities + equity) does not hold within 1% for about 10% of annual rows**; reported values are used as-is.
-- **"Debt to Assets %" is total liabilities ÷ total assets**, not interest-bearing debt, because the source's debt fields are mostly missing.
-- **Survivorship**: only companies with filings through the extract date are present.
-
-## Future improvements
-
-*(not implemented; listed as possible future work)*
-
-- Automated refresh from a newer dataset export
-- Live financial-data API for market cap, price and real-time figures
-- External sector/industry enrichment with a documented mapping
-- Longer history for trend analysis and CAGR
-- Forecasting and anomaly detection
-- Natural-language Q&A over the model
-- AI-generated company summaries
-- Drill-through from company tables to the deep-dive page
+From [Yashasvi Jaiswal](https://www.linkedin.com/in/your-profile-url).
