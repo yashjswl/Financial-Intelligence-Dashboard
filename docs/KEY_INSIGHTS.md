@@ -37,8 +37,13 @@ All figures below were computed by running the queries in this document against 
 
 ## Companies combining high profitability with low leverage
 
-- **Calculated metric:** defining "high profitability" as net margin at or above the analysis-ready universe's 75th percentile (≥16.4%) and "low leverage" as Debt-to-Assets at or below the 25th percentile (≤39.2%), **284 of 4,140** analysis-ready companies (6.9%) meet both criteria in their latest fiscal year. The top of this list overlaps heavily with the small-revenue investment vehicles noted above (ASG, ASA, EOS, RVT, GF, USA, GAM, CLM), for the same tiny-denominator reason.
+- **Calculated metric:** defining "high profitability" as net margin at or above the analysis-ready universe's 75th percentile (≥16.4%) and "low leverage" as Debt-to-Assets at or below the 25th percentile (≤39.2%), **284 of 4,140** analysis-ready companies (6.9%) meet both criteria in their latest fiscal year (the dashboard uses the rounded cut-offs 16.4% and 39.2%, which give 282). The top of this list overlaps heavily with the small-revenue investment vehicles noted above (ASG, ASA, EOS, RVT, GF, USA, GAM, CLM), for the same tiny-denominator reason.
 - **Interpretation:** as a *screening* rule this combination is useful, but any shortlist drawn from it should be reviewed for the revenue-scale effect described above before being read as "financially strongest."
+
+## Margin outliers
+
+- **Calculated metric:** applying 3×IQR fences to latest-year net margins of the 4,140 analysis-ready companies (fences: −81.1% and +89.7%; Q1 −7.9%, Q3 +16.5%), **595 companies (14.4%)** are outside the fences: 443 below the lower fence and 152 above the upper one.
+- **Interpretation:** the share is high because net margin is heavy-tailed here (loss-making companies with small revenue bases, and revenue-light entities with large net income). "Outlier" therefore means statistically unusual, not poorly run.
 
 ## Growth
 

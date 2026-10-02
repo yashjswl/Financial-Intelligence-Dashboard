@@ -68,53 +68,49 @@ Total Free Cash Flow = SUM ( Fact_Annual[FreeCashFlow] )
 
 ```DAX
 Profit Margin % =
-DIVIDE ( [Total Net Income], [Total Revenue] )
+IF ( [Total Revenue] > 0, DIVIDE ( [Total Net Income], [Total Revenue] ) )
 
 Gross Margin % =
-DIVIDE ( SUM ( Fact_Annual[GrossProfit] ), [Total Revenue] )
+IF ( [Total Revenue] > 0, DIVIDE ( SUM ( Fact_Annual[GrossProfit] ), [Total Revenue] ) )
 
 Operating Margin % =
-DIVIDE ( SUM ( Fact_Annual[OperatingIncome] ), [Total Revenue] )
+IF ( [Total Revenue] > 0, DIVIDE ( SUM ( Fact_Annual[OperatingIncome] ), [Total Revenue] ) )
 
 Free Cash Flow Margin % =
-DIVIDE ( [Total Free Cash Flow], [Total Revenue] )
+IF ( [Total Revenue] > 0, DIVIDE ( [Total Free Cash Flow], [Total Revenue] ) )
 ```
 **Business meaning:** share of revenue converted into profit / gross margin / operating profit / free cash flow at whatever grain (single company, cohort, whole universe) is in context.
 **Assumptions:** computed on **aggregated** sums, i.e. a revenue-weighted margin — not an average of each company's own margin (see `Average Company Net Margin %` below for that alternative, which matters when comparing companies of very different sizes).
-**Edge cases:** `DIVIDE` returns `BLANK()` when revenue sums to 0 or is negative in context, instead of erroring or returning an absurd ratio.
+**Edge cases:** the `IF ( [Total Revenue] > 0, … )` guard returns `BLANK()` when revenue is zero or negative (`DIVIDE` alone only guards against zero, and a negative-revenue company would otherwise show a margin with a flipped sign). This matches the per-row ratio columns built in Python, which are also blank when revenue ≤ 0.
 
 ```DAX
 Average Company Net Margin % =
-AVERAGEX ( Fact_Annual, DIVIDE ( Fact_Annual[NetIncome], Fact_Annual[TotalRevenue] ) )
+AVERAGEX ( Fact_Annual, IF ( Fact_Annual[TotalRevenue] > 0, DIVIDE ( Fact_Annual[NetIncome], Fact_Annual[TotalRevenue] ) ) )
 
 Median Company Net Margin % =
-MEDIANX ( Fact_Annual, DIVIDE ( Fact_Annual[NetIncome], Fact_Annual[TotalRevenue] ) )
+MEDIANX ( Fact_Annual, IF ( Fact_Annual[TotalRevenue] > 0, DIVIDE ( Fact_Annual[NetIncome], Fact_Annual[TotalRevenue] ) ) )
 ```
 **Business meaning:** the typical company's own margin, unweighted by size — a mega-cap and a micro-cap count equally. Use this (not the revenue-weighted `Profit Margin %`) when the question is "how profitable is the typical company in this cohort," not "how profitable is this cohort's combined revenue."
-**Edge cases:** `AVERAGEX`/`MEDIANX` skip rows where `DIVIDE` returns `BLANK` (revenue ≤ 0), so the 1,006 zero-or-negative-revenue rows (audit finding #2) don't distort the result; median is reported alongside the average because of the extreme tail seen in the audit (net margin as low as −24,410%).
+**Edge cases:** `AVERAGEX`/`MEDIANX` skip rows where the guard returns `BLANK` (revenue ≤ 0), so the 1,006 zero-or-negative-revenue rows (audit finding #2) don't distort the result; median is reported alongside the average because of the extreme tail seen in the audit (net margin as low as −24,410%).
 
 ```DAX
 Return on Assets % =
 DIVIDE ( [Total Net Income], [Total Assets] )
 
 Return on Equity % =
-VAR PositiveEquity = Fact_Annual[TotalEquity] > 0
-RETURN
-    DIVIDE (
-        CALCULATE ( [Total Net Income], PositiveEquity ),
-        CALCULATE ( [Total Equity], PositiveEquity )
-    )
+DIVIDE (
+    CALCULATE ( [Total Net Income], Fact_Annual[TotalEquity] > 0 ),
+    CALCULATE ( [Total Equity], Fact_Annual[TotalEquity] > 0 )
+)
 
 Debt to Assets % =
 DIVIDE ( [Total Liabilities], [Total Assets] )
 
 Debt to Equity =
-VAR PositiveEquity = Fact_Annual[TotalEquity] > 0
-RETURN
-    DIVIDE (
-        CALCULATE ( [Total Liabilities], PositiveEquity ),
-        CALCULATE ( [Total Equity], PositiveEquity )
-    )
+DIVIDE (
+    CALCULATE ( [Total Liabilities], Fact_Annual[TotalEquity] > 0 ),
+    CALCULATE ( [Total Equity], Fact_Annual[TotalEquity] > 0 )
+)
 
 Asset Turnover =
 DIVIDE ( [Total Revenue], [Total Assets] )
@@ -130,47 +126,58 @@ DIVIDE ( SUM ( Fact_Annual[TotalCurrentAssets] ), SUM ( Fact_Annual[TotalCurrent
 
 ## 3. Cohort benchmark measures (peer comparison, replacing "industry")
 
+**Model rule:** company-level visuals (tables, scatter points, the company slicer) must use `Dim_Company[Stock]`, not `Fact_Annual[Stock]`. Filters flow from the dimension to the facts, so the benchmark measures below can read the company's `RevenueSizeBand` from `Dim_Company` and then lift the company filter to reach its peers.
+
 ```DAX
 Peer Median Net Margin % =
-CALCULATE (
-    [Median Company Net Margin %],
-    ALLSELECTED ( Fact_Annual[Stock] ),
-    VALUES ( Dim_Company[RevenueSizeBand] )
-)
+VAR PeerBand = SELECTEDVALUE ( Dim_Company[RevenueSizeBand] )
+RETURN
+    IF (
+        NOT ISBLANK ( PeerBand ),
+        CALCULATE (
+            [Median Company Net Margin %],
+            REMOVEFILTERS ( Dim_Company[Stock] ),
+            Dim_Company[RevenueSizeBand] = PeerBand
+        )
+    )
 ```
-**Business meaning:** the median net margin of companies in the *same revenue-size cohort* as whatever is selected, ignoring the company-level slicer but respecting the size-band filter. This is the peer benchmark used in place of an industry average.
-**Assumptions:** peer group = same `RevenueSizeBand` quintile (computed in `dim_company.csv` from latest-FY revenue). Explicitly not an industry peer group — the dataset does not support one.
-**Edge cases:** on the "Not meaningful (revenue <= 0)" band, the measure is `BLANK` for every member (median of an empty/undefined set); the report labels that band accordingly rather than showing a misleading 0%.
+**Business meaning:** the median net margin of companies in the *same revenue-size cohort* as the company on the current row. This is the peer benchmark used in place of an industry average.
+**Assumptions:** peer group = same `RevenueSizeBand` quintile (computed in `dim_company.csv` from latest-FY revenue); other slicers (e.g. `ProfitabilityTier`, `DataCompletenessFlag`) still apply. The company itself is part of its own peer median. Explicitly not an industry peer group.
+**Edge cases:** `BLANK` when the context holds more than one band (e.g. a total row) and for the "Not meaningful (revenue <= 0)" band (no defined margins).
 
 ```DAX
 Company Net Margin % vs Peer Median =
 VAR CompanyMargin = [Average Company Net Margin %]
 VAR PeerMedian = [Peer Median Net Margin %]
 RETURN
-    IF ( AND ( NOT ISBLANK ( CompanyMargin ), NOT ISBLANK ( PeerMedian ) ), CompanyMargin - PeerMedian )
+    IF ( NOT ISBLANK ( CompanyMargin ) && NOT ISBLANK ( PeerMedian ), CompanyMargin - PeerMedian )
 
 Company Net Margin % vs Peer Median (%) =
 VAR CompanyMargin = [Average Company Net Margin %]
 VAR PeerMedian = [Peer Median Net Margin %]
 RETURN
-    DIVIDE ( CompanyMargin - PeerMedian, ABS ( PeerMedian ) )
+    IF ( NOT ISBLANK ( CompanyMargin ) && NOT ISBLANK ( PeerMedian ), DIVIDE ( CompanyMargin - PeerMedian, ABS ( PeerMedian ) ) )
 ```
-**Business meaning:** percentage-point (first measure) and relative (second measure) variance of a selected company's margin from its size-band peer median — answers "is this company's profitability above or below benchmark?"
-**Edge cases:** blank when either side is blank (e.g. revenue ≤ 0), rather than showing a false variance.
+**Business meaning:** percentage-point (first) and relative (second) variance of a company's margin from its size-band peer median: "is this company's profitability above or below benchmark?"
+**Edge cases:** blank when either side is blank, rather than a false variance; relative variance is blank when the peer median is 0.
 
 ```DAX
 Company Debt to Assets % vs Peer Median =
+VAR PeerBand = SELECTEDVALUE ( Dim_Company[RevenueSizeBand] )
 VAR CompanyRatio = [Debt to Assets %]
 VAR PeerMedian =
     CALCULATE (
         MEDIANX ( Fact_Annual, DIVIDE ( Fact_Annual[TotalLiabilities], Fact_Annual[TotalAssets] ) ),
-        ALLSELECTED ( Fact_Annual[Stock] ),
-        VALUES ( Dim_Company[RevenueSizeBand] )
+        REMOVEFILTERS ( Dim_Company[Stock] ),
+        Dim_Company[RevenueSizeBand] = PeerBand
     )
 RETURN
-    IF ( AND ( NOT ISBLANK ( CompanyRatio ), NOT ISBLANK ( PeerMedian ) ), CompanyRatio - PeerMedian )
+    IF (
+        NOT ISBLANK ( PeerBand ) && NOT ISBLANK ( CompanyRatio ) && NOT ISBLANK ( PeerMedian ),
+        CompanyRatio - PeerMedian
+    )
 ```
-**Business meaning:** how a company's leverage compares with same-size peers.
+**Business meaning:** how a company's leverage (liabilities ÷ assets) compares with same-size peers.
 
 ---
 
@@ -178,20 +185,26 @@ RETURN
 
 ```DAX
 Revenue Rank (Universe) =
-RANKX ( ALLSELECTED ( Fact_Annual[Stock] ), [Total Revenue], , DESC, Dense )
-
-Revenue Rank (Peer Cohort) =
-RANKX (
-    CALCULATETABLE ( VALUES ( Fact_Annual[Stock] ), ALLSELECTED ( Fact_Annual[Stock] ), VALUES ( Dim_Company[RevenueSizeBand] ) ),
-    [Total Revenue], , DESC, Dense
+IF (
+    NOT ISBLANK ( [Total Revenue] ),
+    RANKX ( ALLSELECTED ( Dim_Company[Stock] ), [Total Revenue], , DESC, Dense )
 )
 
 Net Margin Rank (Universe) =
-RANKX ( ALLSELECTED ( Fact_Annual[Stock] ), [Average Company Net Margin %], , DESC, Dense )
+IF (
+    NOT ISBLANK ( [Average Company Net Margin %] ),
+    RANKX ( ALLSELECTED ( Dim_Company[Stock] ), [Average Company Net Margin %], , DESC, Dense )
+)
 ```
-**Business meaning:** a company's position by revenue or margin, either across the whole filtered universe or only within its own size cohort.
-**Assumptions:** `ALLSELECTED` (not `ALL`) so ranks respect slicers the user has set (e.g. a `DataCompletenessFlag = Analysis-ready` filter) but ignore row-level context from the visual itself, which is the standard "rank within what's currently sliced" pattern.
-**Edge cases:** `Dense` ranking so tied companies (e.g. exact revenue ties, which occur among the smallest-revenue rows) share a rank without leaving a gap; `RANKX` returns `BLANK` for rows where the measure itself is blank (e.g. margin undefined).
+**Business meaning:** a company's position by revenue or margin across the filtered universe. These two measures are defined in the model; the report's Top 10 tables use Top N filters instead, so they are not displayed on a page. (A peer-cohort rank was drafted but is not included, because it was never validated.)
+**Assumptions:** `ALLSELECTED` (not `ALL`) so ranks respect slicers the user has set but ignore the row context of the visual. Rank is computed over `Dim_Company[Stock]`, so a visual using it must have `Dim_Company[Stock]` on its rows.
+**Edge cases:** `Dense` ranking so ties share a rank without gaps; the `IF` returns `BLANK` for companies whose measure is undefined (e.g. revenue ≤ 0), so they are not given a misleading rank.
+
+---
+
+## 4b. Outlier flag (design note)
+
+An `Is Outlier (Net Margin)` measure exists in the model: it computed the 3×IQR fences with `PERCENTILEX.INC` over `ALLSELECTED ( Dim_Company[Stock] )`. It is **not used on any page**. When the outlier table was filtered on it, the fences were recalculated from the already-filtered, already-extreme companies, so the flag disagreed with the independent check (for example a 1,756% margin was labelled "Typical"). The report instead applies **fixed fences** to `Profit Margin %`: below **−81.1%** or above **+89.7%**. They are Q1 − 3×IQR and Q3 + 3×IQR of latest-year net margins across the 4,140 analysis-ready companies (Q1 = −7.9%, Q3 = +16.5%, IQR = 24.4 points), reproduced by `python/dashboard_reference_values.py`. 595 companies fall outside them (443 below, 152 above).
 
 ---
 
@@ -199,13 +212,13 @@ RANKX ( ALLSELECTED ( Fact_Annual[Stock] ), [Average Company Net Margin %], , DE
 
 ```DAX
 Revenue Growth YoY % =
-AVERAGE ( Fact_Annual[RevenueGrowthYoY] )
+MEDIAN ( Fact_Annual[RevenueGrowthYoY] )
 
 Net Income Growth YoY % =
-AVERAGE ( Fact_Annual[NetIncomeGrowthYoY] )
+MEDIAN ( Fact_Annual[NetIncomeGrowthYoY] )
 ```
 **Business meaning:** year-over-year growth versus each company's own prior available fiscal period.
-**Assumptions:** computed in `python/data_validation.py` using a per-company `FYIndex` join (not calendar time-intelligence) because fiscal year-ends are not aligned across companies — see [`DATA_MODEL.md`](DATA_MODEL.md) for why. At the single-company grain, `AVERAGE` simply returns that company's one value; at a cohort grain it is the (unweighted) average YoY growth across the companies in context.
+**Assumptions:** computed in `python/data_validation.py` using a per-company `FYIndex` join (not calendar time-intelligence) because fiscal year-ends are not aligned across companies — see [`DATA_MODEL.md`](DATA_MODEL.md) for why. At the single-company grain, `MEDIAN` simply returns that company's one value; at a cohort grain it is the median YoY growth across companies. Median, not average, because growth rates have an extreme tail (the latest-FY maximum is +28,338%) that would dominate any average.
 **Edge cases:** blank for each company's first available fiscal year (no prior period to compare — 5,172 of 17,511 annual rows) and blank where the prior period's value is 0 (division guarded at build time).
 
 ---
