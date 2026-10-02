@@ -9,14 +9,14 @@ All figures below were computed by running the queries in this document against 
 
 ## Revenue concentration by size cohort
 
-- **Calculated metric:** grouping companies into revenue-size quintiles (`RevenueSizeBand`, computed on latest-FY revenue), the top quintile ("5 - Mega," 836 companies) accounts for **$16.40 trillion** of the **$18.41 trillion** total latest-FY revenue in the dataset — **89.0%** of aggregate revenue from 19% of companies.
+- **Calculated metric:** grouping companies into revenue-size quintiles (`RevenueSizeBand`, computed on latest-FY revenue), the top quintile ("5 - Mega," 836 companies) accounts for **$16.40 trillion** of the **$18.41 trillion** total latest-FY revenue in the dataset — **89.1%** of aggregate revenue from 19% of companies.
 - **Interpretation:** revenue in this universe is heavily concentrated in a small number of very large companies, which is expected for a cross-section of *all* public companies (most listed companies are small by revenue even though a few dominate aggregate totals) rather than a dataset artifact.
 
 ## Profitability by size cohort
 
-- **Calculated metric:** revenue-weighted net margin (aggregate net income ÷ aggregate revenue) by size band: Mega 8.51%, Large 6.92%, Small 4.81%, Mid 4.68%, Micro −45.72% (Micro band skewed by loss-making pre-revenue companies).
-- **Calculated metric:** the *median* company's net margin by band (less sensitive to a few very large or very negative numbers) is highest for Mega-band companies (6.78%) and lowest for Micro-band companies (−45.72%), with Large/Small/Mid clustered between 4.6% and 5.5%.
-- **Interpretation:** both the aggregate and the typical-company view agree that larger companies in this dataset are, on average, more profitable and more consistently profitable than the smallest companies — plausibly because the Micro band contains a disproportionate share of early-stage/loss-making, pre-revenue companies (biotech, small-cap developers) rather than because size itself drives margin.
+- **Calculated metric:** revenue-weighted net margin (aggregate net income ÷ aggregate revenue) by size band: Mega 8.51%, Large 6.92%, Mid 4.68%, Small −1.55%, Micro −91.55% (the two smallest bands are dragged negative by loss-making companies with very small revenue bases).
+- **Calculated metric:** the *median* company's net margin by band (less sensitive to a few very large or very negative numbers) is highest for Mega-band companies (6.78%) and lowest for Micro-band companies (−45.72%), with Large (5.47%), Small (4.81%) and Mid (4.62%) clustered between 4.6% and 5.5% — i.e. the *typical* Small company is profitable even though the Small band's aggregate margin is negative, because a few large losses dominate the weighted figure.
+- **Interpretation:** both the aggregate and the typical-company view agree that larger companies in this dataset are, on average, more profitable and more consistently profitable than the smallest companies — plausibly because the Micro band contains a disproportionate share of loss-making companies with very small revenue bases rather than because size itself drives margin. (The dataset has no sector field, so the *type* of company in that band cannot be determined from the data.)
 - **Calculated metric:** the correlation between log-revenue and net margin (companies with positive revenue) is **+0.20** — a weak positive relationship, not a strong one. Size explains only a small part of the variation in profitability.
 
 ## Largest companies (latest fiscal year, by revenue)
@@ -33,7 +33,7 @@ All figures below were computed by running the queries in this document against 
 ## Leverage
 
 - **Calculated metric:** median Debt-to-Assets (`TotalLiabilities / TotalAssets`) across companies with a computable ratio is **57.4%**; the middle 50% of companies (IQR) sits between 36.9% and 78.4%.
-- **Observed fact:** the eight companies with the highest Debt-to-Assets ratios (up to 72.6× for SONN) all have total assets under $6M — the ratio is extreme because the denominator is very small, not because liabilities are unusually large in absolute terms. This is flagged as a scale effect, not treated as "worst-financed."
+- **Observed fact:** the eight companies with the highest Debt-to-Assets ratios (SONN 72.6×, TMBR 16.3×, OMEX 11.0×, GMBL 9.9×, KMPH 8.1×, DPZ 3.5×, MDLY 3.4×, MNKD 3.0×) are mostly very small — five of the eight have total assets under $11M — so the extreme ratios largely reflect small denominators. The exception is DPZ (total assets $1.38B), whose ratio reflects genuinely liabilities-heavy financing relative to assets. Ratios above 1× mean liabilities exceed assets (negative book equity); this is flagged as a scale effect for the small names, not treated as "worst-financed."
 
 ## Companies combining high profitability with low leverage
 
@@ -43,7 +43,7 @@ All figures below were computed by running the queries in this document against 
 ## Growth
 
 - **Calculated metric:** median year-over-year revenue growth (latest fiscal year vs. each company's own prior available period, computed via `FYIndex`) across the 12,339 company-years where a prior period exists is **+4.8%**.
-- **Observed fact:** the fastest revenue growth in the latest available year belongs to VERB (+283%), GWGH (+238%), APG (+221%), CPRX (+204%) and SLGL (+177%) — all growing from a comparatively small prior-year revenue base, which mechanically produces large percentage swings.
+- **Observed fact:** the fastest revenue growth in the latest available year belongs to VERB (+28,338%), GWGH (+23,761%), APG (+22,070%), CPRX (+20,361%) and SLGL (+17,655%). Growth this extreme implies a very small prior-year revenue base (e.g. VERB's latest revenue is $9.1M), which mechanically produces large percentage swings; the *median* (+4.8%) is the representative figure.
 
 ## What this dashboard does **not** claim
 

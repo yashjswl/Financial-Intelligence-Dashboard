@@ -91,20 +91,30 @@ Median Company Net Margin % =
 MEDIANX ( Fact_Annual, DIVIDE ( Fact_Annual[NetIncome], Fact_Annual[TotalRevenue] ) )
 ```
 **Business meaning:** the typical company's own margin, unweighted by size — a mega-cap and a micro-cap count equally. Use this (not the revenue-weighted `Profit Margin %`) when the question is "how profitable is the typical company in this cohort," not "how profitable is this cohort's combined revenue."
-**Edge cases:** `AVERAGEX`/`MEDIANX` skip rows where `DIVIDE` returns `BLANK` (revenue ≤ 0), so the 224 loss-of-denominator rows (audit finding #2) don't distort the result; median is reported alongside the average because of the extreme tail seen in the audit (net margin as low as −24,410%).
+**Edge cases:** `AVERAGEX`/`MEDIANX` skip rows where `DIVIDE` returns `BLANK` (revenue ≤ 0), so the 1,006 zero-or-negative-revenue rows (audit finding #2) don't distort the result; median is reported alongside the average because of the extreme tail seen in the audit (net margin as low as −24,410%).
 
 ```DAX
 Return on Assets % =
 DIVIDE ( [Total Net Income], [Total Assets] )
 
 Return on Equity % =
-DIVIDE ( [Total Net Income], CALCULATE ( [Total Equity], Fact_Annual[TotalEquity] > 0 ) )
+VAR PositiveEquity = Fact_Annual[TotalEquity] > 0
+RETURN
+    DIVIDE (
+        CALCULATE ( [Total Net Income], PositiveEquity ),
+        CALCULATE ( [Total Equity], PositiveEquity )
+    )
 
 Debt to Assets % =
 DIVIDE ( [Total Liabilities], [Total Assets] )
 
 Debt to Equity =
-DIVIDE ( [Total Liabilities], CALCULATE ( [Total Equity], Fact_Annual[TotalEquity] > 0 ) )
+VAR PositiveEquity = Fact_Annual[TotalEquity] > 0
+RETURN
+    DIVIDE (
+        CALCULATE ( [Total Liabilities], PositiveEquity ),
+        CALCULATE ( [Total Equity], PositiveEquity )
+    )
 
 Asset Turnover =
 DIVIDE ( [Total Revenue], [Total Assets] )
@@ -113,7 +123,7 @@ Current Ratio =
 DIVIDE ( SUM ( Fact_Annual[TotalCurrentAssets] ), SUM ( Fact_Annual[TotalCurrentLiabilities] ) )
 ```
 **Business meaning:** profitability relative to assets/equity, leverage, and short-term liquidity.
-**Assumptions:** `Return on Equity %` and `Debt to Equity` explicitly exclude negative-equity rows from the denominator sum (audit finding #4: 1,410 annual rows have negative equity, where these ratios are not economically meaningful and would produce misleading signs). This mirrors the same guard already applied in `python/data_validation.py` when computing the per-row `ReturnOnEquity`/`DebtToEquity` columns, so the pre-computed columns and these aggregate measures agree.
+**Assumptions:** `Return on Equity %` and `Debt to Equity` exclude negative-equity rows from **both** numerator and denominator (so the ratio is computed on the same set of companies) (audit finding #4: 1,410 annual rows have negative equity, where these ratios are not economically meaningful and would produce misleading signs). This follows the same rule as the per-row `ReturnOnEquity`/`DebtToEquity` columns built in `python/data_validation.py` (undefined when equity ≤ 0); the aggregate measure is a pooled ratio over positive-equity companies, not an average of the per-row values.
 **Edge cases:** all `BLANK()` rather than error/infinite when the denominator is 0 or excluded.
 
 ---

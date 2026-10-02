@@ -60,8 +60,13 @@ Profit Margin % =
 DIVIDE ( [Total Net Income], [Total Revenue] )
 
 Return on Equity % =
-DIVIDE ( [Total Net Income], CALCULATE ( [Total Equity], Fact_Annual[TotalEquity] > 0 ) )
--- blank when equity <= 0 (1,410 annual rows) — see docs/DAX_MEASURES.md
+VAR PositiveEquity = Fact_Annual[TotalEquity] > 0
+RETURN
+    DIVIDE (
+        CALCULATE ( [Total Net Income], PositiveEquity ),
+        CALCULATE ( [Total Equity], PositiveEquity )
+    )
+-- negative-equity rows (1,410) excluded — see docs/DAX_MEASURES.md
 
 Peer Median Net Margin % =
 CALCULATE (
@@ -75,7 +80,7 @@ All 20+ measures, with business meaning, assumptions and edge cases for each, ar
 
 ## Business insights (validated against the data)
 
-- The top revenue-size quintile (836 of 4,422 companies) accounts for **89.0%** of aggregate latest-fiscal-year revenue.
+- The top revenue-size quintile (836 of 4,422 companies) accounts for **89.1%** of aggregate latest-fiscal-year revenue.
 - Median year-over-year revenue growth across companies with a prior fiscal year on record is **+4.8%**.
 - The correlation between company size (log revenue) and net margin is a weak **+0.20** — size only weakly predicts profitability in this dataset.
 - The highest single net margins in the dataset belong to small, revenue-light entities (e.g. closed-end funds) where a tiny revenue line sits next to a much larger net income — flagged as a scale effect, not "best performance."
