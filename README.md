@@ -129,4 +129,12 @@ public-company-financial-intelligence/
 └── screenshots/                       # the four report pages
 ```
 
-From [Yashasvi Jaiswal](https://www.linkedin.com/in/your-profile-url).
+## Contact
+
+From Yashasvi Jaiswal. Source code is available for review on request.
+
+LinkedIn: [linkedin.com/in/yashjswl](https://www.linkedin.com/in/yashjswl/)
+
+---
+
+&copy; 2026 Yashasvi Jaiswal.
