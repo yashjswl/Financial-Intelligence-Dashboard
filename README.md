@@ -131,7 +131,7 @@ public-company-financial-intelligence/
 
 ## Contact
 
-From Yashasvi Jaiswal. Source code is available for review on request.
+From Yashasvi Jaiswal. 
 
 LinkedIn: [linkedin.com/in/yashjswl](https://www.linkedin.com/in/yashjswl/)
 
