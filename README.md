@@ -137,4 +137,6 @@ LinkedIn: [linkedin.com/in/yashjswl](https://www.linkedin.com/in/yashjswl/)
 
 ---
 
-&copy; 2026 Yashasvi Jaiswal.
+&copy; 2026 [Yashasvi Jaiswal](https://yashjswl.com).
+
+Email: [hello@yashjswl.com](mailto:hello@yashjswl.com)
