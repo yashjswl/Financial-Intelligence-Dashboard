@@ -131,12 +131,12 @@ public-company-financial-intelligence/
 
 ## Contact
 
-From Yashasvi Jaiswal. 
+From [Yashasvi Jaiswal](https://yashjswl.com). 
 
 LinkedIn: [linkedin.com/in/yashjswl](https://www.linkedin.com/in/yashjswl/)
 
+Email: [hello@yashjswl.com](mailto:hello@yashjswl.com)
+
 ---
 
-&copy; 2026 [Yashasvi Jaiswal](https://yashjswl.com).
-
-Email: [hello@yashjswl.com](mailto:hello@yashjswl.com)
+&copy; 2026 Yashasvi Jaiswal.
